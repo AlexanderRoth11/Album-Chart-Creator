@@ -57,13 +57,13 @@ const CardHeader = ({ text, type }: CardHeaderProps) => {
 
       {showModal && (
         <Modal title={"Reset Section"} show={showModal} closeModal={closeModal}>
-          <div>
+          <div className="mt-10">
             <p>
               Are you sure you want to reset the <b>{text}</b> section?
             </p>
             <p className="mt-1">This will delete all entries in this section.</p>
           </div>
-          <div className="mt-16 flex justify-center gap-4 sm:justify-end">
+          <div className="mt-10 flex justify-center gap-4 sm:justify-end">
             <div className="min-w-28">
               <Button text={"Cancel"} onClick={closeModal} appearance="cancel" />
             </div>

@@ -87,12 +87,12 @@ const CardButtons = ({ size, album, showInfoModal, setShowInfoModal }: CardButto
 
       {showDeleteModal && (
         <Modal title={"Delete Album"} show={showDeleteModal} closeModal={closeModal}>
-          <div>
+          <div className="mt-10">
             <p>
               Are you sure you want to delete <b>{album.album}</b> by <b>{album.band}</b>?
             </p>
           </div>
-          <div className="mt-16 flex justify-center gap-4 sm:justify-end">
+          <div className="mt-10 flex justify-center gap-4 sm:justify-end">
             <div className="min-w-28">
               <Button text={"Cancel"} onClick={closeModal} appearance="cancel" />
             </div>
