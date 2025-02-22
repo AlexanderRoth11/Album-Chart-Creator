@@ -1,0 +1,86 @@
+.input-wrapper {
+  input[type="text"],
+  input[type="number"],
+  input[type="url"] {
+    width: 225px;
+    padding: 0 16px;
+
+    background-color: transparent;
+    border: 1px solid #555555;
+    font-size: 16px;
+    outline: none;
+    border-radius: 4px;
+    height: 56px;
+    box-sizing: border-box;
+  }
+
+  input[type="text"]:hover,
+  input[type="number"]:hover,
+  input[type="url"]:hover {
+    border-color: #fff;
+  }
+
+  input[type="text"]:focus,
+  input[type="number"]:focus,
+  input[type="url"]:focus {
+    border-color: #4682b4;
+    border-width: 1.5px;
+    padding: 0 15.5px;
+  }
+
+  input:invalid {
+    border-color: #d6453d;
+  }
+
+  input:invalid:hover {
+    border-color: #d6453d;
+  }
+
+  input:invalid:focus {
+    border-color: #d6453d;
+    border-width: 1.5px;
+    padding: 0 15.5px;
+  }
+
+  .label {
+    position: absolute;
+    left: 16px;
+    font-size: 16px;
+    top: 16px;
+    color: #ffffffb3;
+    background-color: #333333;
+    transition: top 0.3s ease;
+  }
+
+  input[type="text"]:focus + .label,
+  input[type="number"]:focus + .label,
+  input[type="url"]:focus + .label,
+  .label.active {
+    font-size: 12px;
+    top: -8px;
+    left: 10px;
+    padding: 0 4px 0 2px;
+  }
+
+  input[type="text"]:focus + .label,
+  input[type="number"]:focus + .label,
+  input[type="url"]:focus + .label {
+    color: #4682b4;
+  }
+
+  input[type="text"]:invalid + .label,
+  input[type="number"]:invalid + .label,
+  input[type="url"]:invalid + .label {
+    color: #d6453d;
+  }
+
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
+}

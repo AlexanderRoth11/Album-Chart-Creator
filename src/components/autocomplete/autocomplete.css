@@ -1,0 +1,70 @@
+.autocomplete-wrapper {
+  border: 1px solid #555555;
+  width: 225px;
+  padding: 0 16px;
+  border-radius: 4px;
+  box-sizing: border-box;
+  height: 56px;
+
+  input[type="text"] {
+    background-color: transparent;
+    font-size: 16px;
+    outline: none;
+    height: 100%;
+    width: 161px;
+  }
+
+  .label {
+    position: absolute;
+    left: 16px;
+    font-size: 16px;
+    top: 16px;
+    color: #ffffffb3;
+    background-color: #333333;
+    transition: top 0.3s ease;
+  }
+
+  .label-error {
+    color: #d6453d;
+  }
+}
+
+.autocomplete-wrapper:hover {
+  border-color: #fff;
+}
+
+.autocomplete-wrapper:focus-within {
+  border-color: #4682b4;
+  border-width: 1.5px;
+  padding: 0 15.5px;
+}
+
+.error {
+  border-color: #d6453d;
+}
+
+.error:hover {
+  border-color: #d6453d;
+}
+
+.error:focus-within {
+  border-color: #d6453d;
+  border-width: 1.5px;
+  padding: 0 15.5px;
+}
+
+.autocomplete-wrapper:focus-within .label,
+.autocomplete-wrapper .label.active {
+  font-size: 12px;
+  top: -8px;
+  left: 10px;
+  padding: 0 4px 0 2px;
+}
+
+.autocomplete-wrapper:focus-within .label {
+  color: #4682b4;
+}
+
+.autocomplete-wrapper:focus-within .label-error {
+  color: #d6453d;
+}

@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+}
+
+body {
+  background-color: #1e1e1e;
+  color: #fff;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+* {
+  @apply scrollbar scrollbar-track-[#333333] scrollbar-thumb-[#555555];
+}
