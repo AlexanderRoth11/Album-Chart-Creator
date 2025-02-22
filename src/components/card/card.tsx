@@ -54,7 +54,7 @@ const Card = ({ album, size, presentation = false }: Card) => {
               onClick={() => {
                 if (!presentation) setShowInfoModal(true);
               }}
-              className={`mx-auto object-contain ${!presentation ? "cursor-pointer" : ""}`}
+              className={`mx-auto h-full object-contain ${!presentation ? "cursor-pointer" : ""}`}
             />
           )}
         </div>
