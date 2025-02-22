@@ -36,7 +36,7 @@ const CardArea = ({ size }: CardAreaProps) => {
 
   useEffect(() => {
     const storedAlbums = localStorage.getItem(albumType);
-    if (storedAlbums) {
+    if (storedAlbums && JSON.parse(storedAlbums).length > 0) {
       const parsedAlbums: Album[] = JSON.parse(storedAlbums);
 
       dispatch({

@@ -7,12 +7,16 @@ import AlbumList from "../album/album-list";
 import Modal from "../modal/modal";
 import Button from "../button/button";
 import Spinner from "../spinner/spinner";
+import { useAppContext } from "@/context/app-context";
+import { AlbumType } from "@/types/enums";
+import { Album } from "@/types/components";
 
 type PageLayoutProps = {
   children: ReactNode;
 };
 
 const PageLayout = ({ children }: PageLayoutProps) => {
+  const { dispatch } = useAppContext();
   const [showDisclaimer, setShowDisclaimer] = useState(true);
   const [initialLoad, setInitialLoad] = useState(true);
   const [fetchLoad, setFetchLoad] = useState(true);
@@ -30,12 +34,27 @@ const PageLayout = ({ children }: PageLayoutProps) => {
     setInitialLoad(false);
   }, []);
 
+  const addToState = (type: AlbumType, data: Album[]) => {
+    dispatch({
+      type: "REPLACE_ALBUMS",
+      key: type,
+      payload: data,
+    });
+
+    localStorage.setItem(type, JSON.stringify(data));
+  };
+
   const onStart = () => {
     setShowDisclaimer(false);
 
     fetch("/api/albums")
+      .then((res) => {
+        return res.json();
+      })
       .then((data) => {
-        console.log(data);
+        addToState(AlbumType.large, data.largeAlbums);
+        addToState(AlbumType.medium, data.mediumAlbums);
+        addToState(AlbumType.small, data.smallAlbums);
         setFetchLoad(false);
       })
       .catch((err) => {
@@ -54,11 +73,11 @@ const PageLayout = ({ children }: PageLayoutProps) => {
             <Modal title={"Welcome to Album Chart Creator!"} show={showDisclaimer} closeModal={() => setShowDisclaimer(false)} disclaimer>
               <div className="flex flex-col">
                 <p>
-                  By clicking the button below, you'll load a prefilled chart featuring my 100 personal favorite albums. Feel free to explore these
-                  selections, or hit the reset buttons of each section to start building your own chart from scratch.
+                  By clicking the button below, you&apos;ll load a prefilled chart featuring my 100 personal favorite albums. Feel free to explore
+                  these selections, or hit the reset buttons of each section to start building your own chart from scratch.
                 </p>
                 <p className="mt-3">
-                  Please note that your album entries are saved in your browser cache. If caching is disabled, your picks won't be retained.
+                  Please note that your album entries are saved in your browser cache. If caching is disabled, your picks won&apos;t be retained.
                 </p>
                 <p className="mt-3">Have fun and enjoy your musical journey!</p>
 
