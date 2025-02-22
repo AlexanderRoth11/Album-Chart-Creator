@@ -76,9 +76,13 @@ const PageLayout = ({ children }: PageLayoutProps) => {
                   By clicking the button below, you&apos;ll load a prefilled chart featuring my 100 personal favorite albums. Feel free to explore
                   these selections, or hit the reset buttons of each section to start building your own chart from scratch.
                 </p>
+
                 <p className="mt-3">
                   Please note that your album entries are saved in your browser cache. If caching is disabled, your picks won&apos;t be retained.
                 </p>
+
+                <p className="mt-3">Once you have selected your top albums, you can save them as a PDF.</p>
+
                 <p className="mt-3">Have fun and enjoy your musical journey!</p>
 
                 <span className="mt-10 inline-block w-48 self-center">
