@@ -73,8 +73,8 @@ const PageLayout = ({ children }: PageLayoutProps) => {
             <Modal title={"Welcome to Album Chart Creator!"} show={showDisclaimer} closeModal={() => setShowDisclaimer(false)} disclaimer>
               <div className="flex flex-col">
                 <p className="mt-8">
-                  By clicking the button below, you will load a prefilled chart featuring my 100 personal favorite albums. Feel free to explore these
-                  selections, or hit the reset button
+                  By clicking the button below, you will load a prefilled chart featuring my 100 favorite music albums. Feel free to explore my album
+                  chart, or hit the reset button
                   <span className="mx-1">
                     (
                     <svg
@@ -83,7 +83,7 @@ const PageLayout = ({ children }: PageLayoutProps) => {
                       viewBox="0 0 24 24"
                       strokeWidth="1.5"
                       stroke="currentColor"
-                      className="mx-1 inline size-5 bg-black"
+                      className="mx-0.5 inline size-5 bg-black"
                     >
                       <path
                         strokeLinecap="round"
@@ -99,8 +99,6 @@ const PageLayout = ({ children }: PageLayoutProps) => {
                 <p className="mt-8">
                   Please note that your album entries are saved in your browser cache. If caching is disabled, your picks will not be retained.
                 </p>
-
-                <p className="mt-1">Once you have selected your top albums, you can save them as a PDF.</p>
 
                 <p className="mt-8">Have fun and enjoy your musical journey!</p>
 
