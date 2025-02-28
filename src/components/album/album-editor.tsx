@@ -122,6 +122,16 @@ const AlbumEditor = ({ size, showModal, setModal, updateAlbum, info }: AlbumEdit
               <>
                 <Input type="text" label={"Album"} value={album} onChange={(e) => setAlbum(e.target.value)} error={submitClicked && !album} />
                 <Input type="text" label={"Band"} value={band} onChange={(e) => setBand(e.target.value)} error={submitClicked && !band} />
+                <Autocomplete label={"Country"} value={country} options={countries} onChange={setCountry} error={submitClicked && !country} />
+                <Autocomplete
+                  label={"Genre"}
+                  value={genre}
+                  options={[...state.genreOptions].sort()}
+                  onChange={setGenre}
+                  allowAddOption
+                  error={submitClicked && !genre}
+                />
+
                 <div className="items-center gap-3 sm:flex">
                   <span className="order-2 flex justify-center max-sm:mb-4 max-sm:w-full">
                     <InfoTooltip
@@ -140,15 +150,6 @@ const AlbumEditor = ({ size, showModal, setModal, updateAlbum, info }: AlbumEdit
                 </div>
 
                 <Input type="number" label={"Year"} value={year} onChange={(e) => setYear(e.target.value)} error={submitClicked && !year} />
-                <Autocomplete label={"Country"} value={country} options={countries} onChange={setCountry} error={submitClicked && !country} />
-                <Autocomplete
-                  label={"Genre"}
-                  value={genre}
-                  options={[...state.genreOptions].sort()}
-                  onChange={setGenre}
-                  allowAddOption
-                  error={submitClicked && !genre}
-                />
               </>
             ) : (
               <>
