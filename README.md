@@ -1,6 +1,6 @@
 # Welcome to Album Chart Creator 🤘
 
-Create stunning album charts effortlessly! Upload your favorite album covers, and Album Chart Creator will automatically extract dominant colors to generate a beautiful, shareable chart. Export your creations as PDFs and showcase your top picks in style.  
+Create stunning album charts effortlessly! Input your top 100 music albums, and Album Chart Creator will automatically extract dominant colors from the album cover to generate a beautiful, shareable chart. Export your creations as PDFs and showcase your top picks in style.  
 
 Built with **Next.js**, **TypeScript**, and **Tailwind CSS**.
 
