@@ -1,6 +1,5 @@
 import CardArea from "@/components/card/card-area";
 import CardHeader from "@/components/card/card-header";
-
 import PageLayout from "@/components/page/page-layout";
 import { AppProvider } from "@/context/app-context";
 import { AlbumSize, AlbumType } from "@/types/enums";

@@ -15,8 +15,8 @@ type CardAreaProps = {
 
 const gapClasses = {
   large: "gap-x-12",
-  medium: "gap-x-6 ",
-  small: " gap-x-6 ",
+  medium: "gap-x-6",
+  small: "gap-x-6",
 };
 
 const maxSize = {

@@ -6,7 +6,7 @@ import React, { useState } from "react";
 import Button from "../button/button";
 import Modal from "../modal/modal";
 import { Album } from "@/types/components";
-import AddAlbum from "../album/album-editor";
+import AlbumEditor from "../album/album-editor";
 
 type CardButtonsProps = {
   size: `${AlbumSize}`;
@@ -103,8 +103,15 @@ const CardButtons = ({ size, album, showInfoModal, setShowInfoModal }: CardButto
         </Modal>
       )}
 
-      {showUpdateModal && <AddAlbum showModal={showUpdateModal} setModal={setShowUpdateModal} size={size} updateAlbum={album} />}
-      {showInfoModal && <AddAlbum showModal={showInfoModal} setModal={setShowInfoModal} size={size} updateAlbum={album} info={true} />}
+      {(showUpdateModal || showInfoModal) && (
+        <AlbumEditor
+          showModal={showUpdateModal || showInfoModal}
+          setModal={showUpdateModal ? setShowUpdateModal : setShowInfoModal}
+          size={size}
+          updateAlbum={album}
+          info={showInfoModal}
+        />
+      )}
     </>
   );
 };
