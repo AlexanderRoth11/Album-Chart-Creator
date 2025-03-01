@@ -21,10 +21,12 @@ const AlbumList = () => {
   };
 
   return (
-    <div id="album-list" className="my-5 ml-48 grid hidden grid-cols-3 gap-8">
-      <ol>{filteredAlbums.slice(0, 34).map((album) => getListEntry(album))}</ol>
-      <ol>{filteredAlbums.slice(34, 68).map((album) => getListEntry(album))}</ol>
-      <ol>{filteredAlbums.slice(68, 100).map((album) => getListEntry(album))}</ol>
+    <div id="album-list" className="flex hidden justify-center">
+      <div className="my-5 grid w-[73.958rem] grid-cols-3 gap-8">
+        <ol>{filteredAlbums.slice(0, 34).map((album) => getListEntry(album))}</ol>
+        <ol>{filteredAlbums.slice(34, 68).map((album) => getListEntry(album))}</ol>
+        <ol>{filteredAlbums.slice(68, 100).map((album) => getListEntry(album))}</ol>
+      </div>
     </div>
   );
 };

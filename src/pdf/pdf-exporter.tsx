@@ -9,59 +9,103 @@ import { State } from "@/context/app-reducer";
 import { filterAlbums } from "@/uitls/filter";
 import Spinner from "@/components/spinner/spinner";
 
-function truncateMultiLineText(element: HTMLElement) {
-  let maxLines = 27;
-
-  if (element.classList.contains("max-h-12")) {
-    maxLines = 38;
+const truncateTextContent = (element: HTMLElement, maxLines: number) => {
+  if (element.textContent && element.textContent.length > maxLines) {
+    element.textContent = element.textContent.slice(0, maxLines).trim() + "...";
   }
+};
 
-  if (element.classList.contains("max-h-14")) {
-    maxLines = 45;
-  }
-
-  if (element.textContent) {
-    if (element.textContent.length > maxLines) {
-      element.textContent = element.textContent.slice(0, maxLines).trim();
-      element.textContent += "...";
-    }
-  }
-}
-
-function truncateText(element: HTMLElement) {
+const truncateText = (element: HTMLElement, className: string) => {
   let maxLines = 20;
 
-  if (element.classList.contains("text-xs")) {
-    maxLines = 28;
-  }
+  if (className.includes("text-xs")) maxLines = 28;
+  if (className.includes("text-sm")) maxLines = 35;
 
-  if (element.classList.contains("text-sm")) {
-    maxLines = 35;
-  }
+  truncateTextContent(element, maxLines);
+};
 
-  if (element.textContent) {
-    if (element.textContent.length > maxLines) {
-      element.textContent = element.textContent.slice(0, maxLines).trim();
-      element.textContent += "...";
-    }
-  }
-}
+const truncateMultiLineText = (element: HTMLElement, className: string) => {
+  let maxLines = 27;
 
-function removeAreas(areas: NodeList, state: State) {
+  if (className.includes("max-h-12")) maxLines = 38;
+  if (className.includes("max-h-14")) maxLines = 45;
+
+  truncateTextContent(element, maxLines);
+};
+
+const removeAreas = (areas: NodeList, state: State) => {
   const largeAlbums = filterAlbums(state.largeAlbums, state.filter);
   const mediumAlbums = filterAlbums(state.mediumAlbums, state.filter);
   const smallAlbums = filterAlbums(state.smallAlbums, state.filter);
 
-  if (largeAlbums.length === 0) {
-    (areas[0] as HTMLElement).remove();
-  }
-  if (mediumAlbums.length === 0) {
-    (areas[1] as HTMLElement).remove();
-  }
-  if (smallAlbums.length === 0) {
-    (areas[2] as HTMLElement).remove();
-  }
-}
+  if (largeAlbums.length === 0) (areas[0] as HTMLElement).remove();
+  if (mediumAlbums.length === 0) (areas[1] as HTMLElement).remove();
+  if (smallAlbums.length === 0) (areas[2] as HTMLElement).remove();
+};
+
+const generatePDF = async (clonedElement: HTMLElement, targetWidth: number) => {
+  const canvas = await html2canvas(clonedElement, {
+    useCORS: true,
+    width: targetWidth,
+    windowWidth: targetWidth,
+    scale: 3.5,
+  });
+
+  const pdfWidth = 800;
+  const pdfHeight = (canvas.height / canvas.width) * pdfWidth;
+  const imgData = canvas.toDataURL("image/jpeg", 0.95);
+
+  const pdf = new jsPDF({
+    orientation: "portrait",
+    unit: "px",
+    format: [pdfWidth, pdfHeight],
+  });
+
+  pdf.setFillColor(30, 30, 30);
+  pdf.rect(0, 0, pdfWidth, pdfHeight, "F");
+  pdf.addImage(imgData, "JPEG", 0, 0, pdfWidth, pdfHeight);
+  pdf.save("album-chart.pdf");
+};
+
+const generateMultiPagePDF = async (firstPage: HTMLElement, secondPage: HTMLElement, targetWidth: number) => {
+  const canvasFirstPage = await html2canvas(firstPage, {
+    useCORS: true,
+    width: targetWidth,
+    windowWidth: targetWidth,
+    scale: 3.5,
+  });
+
+  const canvasSecondPage = await html2canvas(secondPage, {
+    useCORS: true,
+    width: targetWidth,
+    windowWidth: targetWidth,
+    scale: 3.5,
+  });
+
+  const pdfWidth = 800;
+  const pdfHeightFirstPage = (canvasFirstPage.height / canvasFirstPage.width) * pdfWidth;
+  const pdfHeightSecondPage = (canvasSecondPage.height / canvasSecondPage.width) * pdfWidth;
+
+  const imgDataFirstPage = canvasFirstPage.toDataURL("image/jpeg", 0.95);
+  const imgDataSecondPage = canvasSecondPage.toDataURL("image/jpeg", 0.95);
+
+  const pdf = new jsPDF({
+    orientation: "portrait",
+    unit: "px",
+    format: [pdfWidth, pdfHeightFirstPage],
+  });
+
+  pdf.setFillColor(30, 30, 30);
+  pdf.rect(0, 0, pdfWidth, pdfHeightFirstPage, "F");
+  pdf.addImage(imgDataFirstPage, "JPEG", 0, 0, pdfWidth, pdfHeightFirstPage);
+
+  pdf.addPage([pdfWidth, pdfHeightSecondPage]);
+  pdf.setFillColor(30, 30, 30);
+  pdf.rect(0, 0, pdfWidth, pdfHeightSecondPage, "F");
+  pdf.addImage(imgDataSecondPage, "JPEG", 0, 0, pdfWidth, pdfHeightSecondPage);
+
+  pdf.save("album-chart.pdf");
+};
 
 const PdfExporter = () => {
   const { state } = useAppContext();
@@ -77,13 +121,14 @@ const PdfExporter = () => {
     }
 
     try {
-      const clonedElement = element.cloneNode(true) as HTMLElement;
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
 
+      const clonedElement = element.cloneNode(true) as HTMLElement;
       clonedElement.style.position = "absolute";
       clonedElement.style.left = "-9999px";
       clonedElement.style.width = "1535px";
       clonedElement.style.minHeight = "1600px";
-      clonedElement.querySelector("#album-list")?.classList.remove("hidden");
+      if (!isIOS) clonedElement.querySelector("#album-list")?.classList.remove("hidden");
 
       document.body.appendChild(clonedElement);
 
@@ -98,19 +143,19 @@ const PdfExporter = () => {
 
       const multilineTruncateElements = clonedElement.querySelectorAll(".multiline-truncate");
       multilineTruncateElements.forEach((element: any) => {
-        truncateMultiLineText(element);
+        truncateMultiLineText(element, element.className);
         element.classList.remove("multiline-truncate");
       });
 
       const singlelineTruncateElements = clonedElement.querySelectorAll(".singleline-truncate");
       singlelineTruncateElements.forEach((element: any) => {
-        truncateText(element);
+        truncateText(element, element.className);
         element.classList.remove("singleline-truncate");
       });
 
       const targetWidth = 1535;
 
-      if (/iPad|iPhone|iPod/.test(navigator.userAgent) && clonedElement.clientHeight > 2500) {
+      if (isIOS && clonedElement.clientHeight > 2000) {
         const firstPage = clonedElement.cloneNode(true) as HTMLElement;
         const secondPage = clonedElement.cloneNode(true) as HTMLElement;
 
@@ -124,77 +169,19 @@ const PdfExporter = () => {
         clonedElement.appendChild(firstPage);
         clonedElement.appendChild(secondPage);
 
-        const canvasFirstPage = await html2canvas(firstPage, {
-          useCORS: true,
-          width: targetWidth,
-          windowWidth: targetWidth,
-          scale: 3.5,
-        });
-
-        const canvasSecondPage = await html2canvas(secondPage, {
-          useCORS: true,
-          width: targetWidth,
-          windowWidth: targetWidth,
-          scale: 3.5,
-        });
-
-        document.body.removeChild(clonedElement);
-
-        const pdfWidth = 800;
-        const pdfHeightFirstPage = (canvasFirstPage.height / canvasFirstPage.width) * pdfWidth;
-        const pdfHeightSecondPage = (canvasSecondPage.height / canvasSecondPage.width) * pdfWidth;
-
-        const imgDataFirstPage = canvasFirstPage.toDataURL("image/jpeg", 0.95);
-        const imgDataSecondPage = canvasSecondPage.toDataURL("image/jpeg", 0.95);
-
-        const pdf = new jsPDF({
-          orientation: "portrait",
-          unit: "px",
-          format: [pdfWidth, pdfHeightFirstPage],
-        });
-
-        pdf.setFillColor(30, 30, 30);
-        pdf.rect(0, 0, pdfWidth, pdfHeightFirstPage, "F");
-        pdf.addImage(imgDataFirstPage, "JPEG", 0, 0, pdfWidth, pdfHeightFirstPage);
-
-        pdf.addPage([pdfWidth, pdfHeightSecondPage]);
-        pdf.setFillColor(30, 30, 30);
-        pdf.rect(0, 0, pdfWidth, pdfHeightSecondPage, "F");
-        pdf.addImage(imgDataSecondPage, "JPEG", 0, 0, pdfWidth, pdfHeightSecondPage);
-
-        pdf.save("album-chart.pdf");
+        await generateMultiPagePDF(firstPage, secondPage, targetWidth);
       } else {
-        const canvas = await html2canvas(clonedElement, {
-          useCORS: true,
-          width: targetWidth,
-          windowWidth: targetWidth,
-          scale: 3.5,
-        });
-
-        document.body.removeChild(clonedElement);
-
-        const pdfWidth = 800;
-        const pdfHeight = (canvas.height / canvas.width) * pdfWidth;
-
-        const imgData = canvas.toDataURL("image/jpeg", 0.95);
-
-        const pdf = new jsPDF({
-          orientation: "portrait",
-          unit: "px",
-          format: [pdfWidth, pdfHeight],
-        });
-
-        pdf.setFillColor(30, 30, 30);
-        pdf.rect(0, 0, pdfWidth, pdfHeight, "F");
-        pdf.addImage(imgData, "JPEG", 0, 0, pdfWidth, pdfHeight);
-        pdf.save("album-chart.pdf");
+        await generatePDF(clonedElement, targetWidth);
       }
+
+      document.body.removeChild(clonedElement);
     } catch (error) {
       console.error("Error exporting to PDF:", error);
     }
 
     setGenerating(false);
   };
+
   return (
     <div className="flex w-full items-center gap-2">
       <div className="w-32">
