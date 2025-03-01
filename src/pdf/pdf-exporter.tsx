@@ -119,6 +119,7 @@ const PdfExporter = () => {
 
         secondPage.querySelector("#large-area")?.remove();
         secondPage.querySelector("#medium-area")?.remove();
+        secondPage.querySelector("#album-list")?.remove();
 
         clonedElement.appendChild(firstPage);
         clonedElement.appendChild(secondPage);
