@@ -83,10 +83,7 @@ const PdfExporter = () => {
       clonedElement.style.left = "-9999px";
       clonedElement.style.width = "1535px";
       clonedElement.style.minHeight = "1600px";
-
-      if (!/iPad|iPhone|iPod/.test(navigator.userAgent)) {
-        clonedElement.querySelector("#album-list")?.classList.remove("hidden");
-      }
+      clonedElement.querySelector("#album-list")?.classList.remove("hidden");
 
       document.body.appendChild(clonedElement);
 
@@ -113,30 +110,84 @@ const PdfExporter = () => {
 
       const targetWidth = 1535;
 
-      const canvas = await html2canvas(clonedElement, {
-        useCORS: true,
-        width: targetWidth,
-        windowWidth: targetWidth,
-        scale: 3.5,
-      });
+      if (/iPad|iPhone|iPod/.test(navigator.userAgent) && clonedElement.clientHeight > 2500) {
+        const firstPage = clonedElement.cloneNode(true) as HTMLElement;
+        const secondPage = clonedElement.cloneNode(true) as HTMLElement;
 
-      document.body.removeChild(clonedElement);
+        firstPage.querySelector("#small-area")?.remove();
+        firstPage.querySelector("#album-list")?.remove();
 
-      const pdfWidth = 800;
-      const pdfHeight = (canvas.height / canvas.width) * pdfWidth;
+        secondPage.querySelector("#large-area")?.remove();
+        secondPage.querySelector("#medium-area")?.remove();
 
-      const imgData = canvas.toDataURL("image/jpeg", 0.95);
+        clonedElement.appendChild(firstPage);
+        clonedElement.appendChild(secondPage);
 
-      const pdf = new jsPDF({
-        orientation: "portrait",
-        unit: "px",
-        format: [pdfWidth, pdfHeight],
-      });
+        const canvasFirstPage = await html2canvas(firstPage, {
+          useCORS: true,
+          width: targetWidth,
+          windowWidth: targetWidth,
+          scale: 3.5,
+        });
 
-      pdf.setFillColor(30, 30, 30);
-      pdf.rect(0, 0, pdfWidth, pdfHeight, "F");
-      pdf.addImage(imgData, "JPEG", 0, 0, pdfWidth, pdfHeight);
-      pdf.save("album-chart.pdf");
+        const canvasSecondPage = await html2canvas(secondPage, {
+          useCORS: true,
+          width: targetWidth,
+          windowWidth: targetWidth,
+          scale: 3.5,
+        });
+
+        document.body.removeChild(clonedElement);
+
+        const pdfWidth = 800;
+        const pdfHeightFirstPage = (canvasFirstPage.height / canvasFirstPage.width) * pdfWidth;
+        const pdfHeightSecondPage = (canvasSecondPage.height / canvasSecondPage.width) * pdfWidth;
+
+        const imgDataFirstPage = canvasFirstPage.toDataURL("image/jpeg", 0.95);
+        const imgDataSecondPage = canvasSecondPage.toDataURL("image/jpeg", 0.95);
+
+        const pdf = new jsPDF({
+          orientation: "portrait",
+          unit: "px",
+          format: [pdfWidth, pdfHeightFirstPage],
+        });
+
+        pdf.setFillColor(30, 30, 30);
+        pdf.rect(0, 0, pdfWidth, pdfHeightFirstPage, "F");
+        pdf.addImage(imgDataFirstPage, "JPEG", 0, 0, pdfWidth, pdfHeightFirstPage);
+
+        pdf.addPage([pdfWidth, pdfHeightSecondPage]);
+        pdf.setFillColor(30, 30, 30);
+        pdf.rect(0, 0, pdfWidth, pdfHeightSecondPage, "F");
+        pdf.addImage(imgDataSecondPage, "JPEG", 0, 0, pdfWidth, pdfHeightSecondPage);
+
+        pdf.save("album-chart.pdf");
+      } else {
+        const canvas = await html2canvas(clonedElement, {
+          useCORS: true,
+          width: targetWidth,
+          windowWidth: targetWidth,
+          scale: 3.5,
+        });
+
+        document.body.removeChild(clonedElement);
+
+        const pdfWidth = 800;
+        const pdfHeight = (canvas.height / canvas.width) * pdfWidth;
+
+        const imgData = canvas.toDataURL("image/jpeg", 0.95);
+
+        const pdf = new jsPDF({
+          orientation: "portrait",
+          unit: "px",
+          format: [pdfWidth, pdfHeight],
+        });
+
+        pdf.setFillColor(30, 30, 30);
+        pdf.rect(0, 0, pdfWidth, pdfHeight, "F");
+        pdf.addImage(imgData, "JPEG", 0, 0, pdfWidth, pdfHeight);
+        pdf.save("album-chart.pdf");
+      }
     } catch (error) {
       console.error("Error exporting to PDF:", error);
     }
