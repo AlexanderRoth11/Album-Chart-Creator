@@ -84,7 +84,9 @@ const PdfExporter = () => {
       clonedElement.style.width = "1535px";
       clonedElement.style.minHeight = "1600px";
 
-      clonedElement.querySelector("#album-list")?.classList.remove("hidden");
+      if (!/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+        clonedElement.querySelector("#album-list")?.classList.remove("hidden");
+      }
 
       document.body.appendChild(clonedElement);
 
@@ -134,14 +136,7 @@ const PdfExporter = () => {
       pdf.setFillColor(30, 30, 30);
       pdf.rect(0, 0, pdfWidth, pdfHeight, "F");
       pdf.addImage(imgData, "JPEG", 0, 0, pdfWidth, pdfHeight);
-      if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
-        const link = pdf.output("bloburl");
-        setTimeout(() => {
-          window.open(link, "_top");
-        });
-      } else {
-        pdf.save("album-chart.pdf");
-      }
+      pdf.save("album-chart.pdf");
     } catch (error) {
       console.error("Error exporting to PDF:", error);
     }
