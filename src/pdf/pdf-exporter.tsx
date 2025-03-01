@@ -77,10 +77,6 @@ const PdfExporter = () => {
     }
 
     try {
-      if (window.innerWidth < 1500) {
-        document.body.style.width = `${1535}px`;
-      }
-
       const clonedElement = element.cloneNode(true) as HTMLElement;
 
       clonedElement.style.position = "absolute";
@@ -138,7 +134,14 @@ const PdfExporter = () => {
       pdf.setFillColor(30, 30, 30);
       pdf.rect(0, 0, pdfWidth, pdfHeight, "F");
       pdf.addImage(imgData, "JPEG", 0, 0, pdfWidth, pdfHeight);
-      pdf.save("album-chart.pdf");
+      if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+        const link = pdf.output("bloburl");
+        setTimeout(() => {
+          window.open(link, "_top");
+        });
+      } else {
+        pdf.save("album-chart.pdf");
+      }
     } catch (error) {
       console.error("Error exporting to PDF:", error);
     }
