@@ -76,12 +76,14 @@ const PdfExporter = () => {
       return;
     }
 
+    const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+
     try {
       const clonedElement = element.cloneNode(true) as HTMLElement;
 
       clonedElement.style.position = "absolute";
       clonedElement.style.left = "-9999px";
-      clonedElement.style.width = "100%";
+      clonedElement.style.width = "1535px";
       clonedElement.style.minHeight = "1600px";
 
       clonedElement.querySelector("#album-list")?.classList.remove("hidden");
@@ -134,7 +136,15 @@ const PdfExporter = () => {
       pdf.setFillColor(30, 30, 30);
       pdf.rect(0, 0, pdfWidth, pdfHeight, "F");
       pdf.addImage(imgData, "JPEG", 0, 0, pdfWidth, pdfHeight);
-      pdf.save("album-chart.pdf");
+
+      if (iOS) {
+        const link = pdf.output("bloburl");
+        setTimeout(() => {
+          window.open(link, "_top");
+        });
+      } else {
+        pdf.save("album-chart.pdf");
+      }
     } catch (error) {
       console.error("Error exporting to PDF:", error);
     }
