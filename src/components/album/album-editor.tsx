@@ -8,7 +8,7 @@ import Autocomplete from "../autocomplete/autocomplete";
 import Button from "../button/button";
 import Card from "../card/card";
 import { useAppContext } from "@/context/app-context";
-import { getImageGradient } from "@/uitls/image";
+import { getImageGradient } from "@/utils/image";
 import { Album } from "@/types/components";
 import InfoTooltip from "../tooltip/info-tooltip";
 

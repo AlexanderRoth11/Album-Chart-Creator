@@ -1,5 +1,7 @@
+export const runtime = "nodejs";
+
 import { NextResponse } from "next/server";
-import clientPromise from "@/uitls/mongo";
+import clientPromise from "@/utils/mongo";
 
 export async function GET() {
   try {

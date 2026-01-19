@@ -1,6 +1,6 @@
 "use client";
 
-import "../../uitls/css-utils.css";
+import "../../utils/css-utils.css";
 import { Album } from "@/types/components";
 import { AlbumSize } from "@/types/enums";
 import CardButtons from "./card-buttons";

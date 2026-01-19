@@ -6,7 +6,7 @@ import { Album } from "@/types/components";
 import CardEmpty from "./card-empty";
 import { useAppContext } from "@/context/app-context";
 import { AlbumSize, AlbumType } from "@/types/enums";
-import { filterAlbums } from "@/uitls/filter";
+import { filterAlbums } from "@/utils/filter";
 import Spinner from "../spinner/spinner";
 
 type CardAreaProps = {

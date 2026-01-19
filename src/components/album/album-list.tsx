@@ -2,7 +2,7 @@
 
 import { useAppContext } from "@/context/app-context";
 import { Album } from "@/types/components";
-import { filterAlbums } from "@/uitls/filter";
+import { filterAlbums } from "@/utils/filter";
 import React from "react";
 
 const AlbumList = () => {

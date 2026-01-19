@@ -6,7 +6,7 @@ import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { useAppContext } from "@/context/app-context";
 import { State } from "@/context/app-reducer";
-import { filterAlbums } from "@/uitls/filter";
+import { filterAlbums } from "@/utils/filter";
 import Spinner from "@/components/spinner/spinner";
 
 const truncateTextContent = (element: HTMLElement, maxLines: number) => {
